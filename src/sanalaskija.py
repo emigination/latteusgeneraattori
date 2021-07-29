@@ -12,7 +12,7 @@ class Sanalaskija:
         self.jatkavat = []
         self.todennakoisyydet = []
 
-    def opettele(self):
+    def opettele(self, tiedostopolku):
         """Käy opetusdatan läpi, luo listan sanoista, tallentaa sanat ja niiden indeksit trie-rakenteeseen ja laskee taulukon, jossa on todennäköisyydet millä mikäkin sana seuraa jotakin toista sanaa.
 
         Returns:
@@ -22,7 +22,7 @@ class Sanalaskija:
         sanasanakirja = {}
         maarat = {}
         seuraavat = []
-        data = self._lue_opetusdatatiedosto()
+        data = self._lue_opetusdatatiedosto(tiedostopolku)
         for rivi in data:
             sanat = rivi.split(' ')
             edellinen = None
@@ -41,32 +41,32 @@ class Sanalaskija:
                     if self.sanalista[edellinen][len(self.sanalista[edellinen])-1] in ('.', '?', '!'):
                         self.jatkavat.append(indeksi)
                 edellinen = indeksi
-        self.todennakoisyydet = self._laske_todennakoisyydet(seuraavat)
+        self.todennakoisyydet = self._laske_todennakoisyydet(seuraavat, len(self.sanalista))
         return (self.todennakoisyydet, self.sanalista, self.ensimmaiset, self.jatkavat)
 
-    def _lue_opetusdatatiedosto(self):
+    def _lue_opetusdatatiedosto(self, tiedostopolku):
         """Lukee opetusdatan ja luo siitä listan.
 
         Returns:
             Opetusdatan lauseet listana
         """
-        with io.open('latteusgeneraattori/data/opetusdata.txt', encoding='utf-8') as tiedosto:
+        with io.open(tiedostopolku, encoding='utf-8') as tiedosto:
             data = []
             for rivi in tiedosto:
                 rivi = rivi.replace("\n", "")
                 data.append(rivi)
         return data
 
-    def _laske_todennakoisyydet(self, seuraavat):
+    def _laske_todennakoisyydet(self, seuraavat, sanoja):
         """Luo sanoja seuraavien sanojen määrien perusteella todennäköisyystalukon.
 
         Args:
-            seuraavat: lista listoja, joissa on kutakin sanaa seuraavien sanojen indeksit.
+            seuraavat: lista listoja, joissa on kutakin sanaa seuraavien sanojen indeksit
+            sanoja: eri sanojen määrä aineistossa
 
         Returns:
             kaksiuloitteinen taulukko todennäköisyyksiä, jossa rivi vastaa sanan indeksiä ja sarake sitä seuraavan sanan indeksiä.
         """
-        sanoja = len(self.sanalista)
         todennakoisyydet = [[0 for i in range(sanoja)] for j in range(sanoja)]
         for i, sana in enumerate(seuraavat):
             for seuraava in sana:
