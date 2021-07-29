@@ -1,52 +1,63 @@
-#nopea kokeiluversio
-
-import io
 import random
+import io
+from sanalaskija import Sanalaskija
 
-with io.open('opetusdata.txt', encoding='utf-8') as tiedosto:
-    data = []
-    for rivi in tiedosto:
-        rivi = rivi.replace("\n", "")
-        data.append(rivi)
 
-seuraavat = {}
-maarat = {}
-sanalista = []
-ensimmaiset = []
+class Generaattori:
+    """Luokka, joka luo lauseita sanalistojen ja todennäköisyystaulukon avulla.
+    """
 
-for rivi in data:
-    sanat = rivi.split(' ')
-    sanoja = len(sanat)
-    ensimmaiset.append(sanat[0])
-    for i, sana in enumerate(sanat):
-        if sana not in seuraavat:
-            # todennakoisyydet[sana]={}
-            seuraavat[sana]=[]
-            maarat[sana] = 0
-            sanalista.append(sana)
-        if i+1 < sanoja:
-            seuraava = sanat[i+1]
-        else:
-            seuraava = 'LOPPU'
-        # if seuraava not in todennakoisyydet[sana]:
-        #     todennakoisyydet[sana][seuraava] = 1
-        # else:
-        #     todennakoisyydet[sana][seuraava] += 1
-        seuraavat[sana].append(seuraava)
-        maarat[sana] += 1
+    def __init__(self):
+        """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai niiden puuttuessa kutsuu sanalaskijan luomaan tarvittava data.
+        """
 
-# print(todennakoisyydet['Älä'])
-# print(maarat)
+        data = self.lue_tiedostot()
+        if not data:
+            data = Sanalaskija().opettele()
+        self.todennakoisyystaulukko = data[0]
+        self.sanalista = data[1]
+        self.ensimmaiset = data[2]
+        self.jatkavat = data[3]
 
-sana = ensimmaiset[random.randint(0, len(ensimmaiset)-1)]
-# print(satunnainen_sana)
-lause = sana
-while len(lause)<200:
-    seuraava = seuraavat[sana][random.randint(0, len(seuraavat[sana])-1)]
-    if seuraava == 'LOPPU':
-        if len(lause) > 30:
-            break
-        seuraava = ensimmaiset[random.randint(0, len(ensimmaiset)-1)]
-    lause += ' ' + seuraava
-    sana = seuraava
-print(lause)
+    def generoi(self):
+        """Luo lauseita Markovin ketjun avulla.
+
+        Returns:
+            Valmis mietelause merkkijonona.
+        """
+        indeksi = self.ensimmaiset[random.randint(0, len(self.ensimmaiset)-1)]
+        lause = self.sanalista[indeksi]
+        while len(lause) < 200:
+            satunnainen = random.random()
+            summa = 0
+            for i, todennakoisyys in enumerate(self.todennakoisyystaulukko[indeksi]):
+                summa += todennakoisyys
+                if summa >= satunnainen:
+                    lause += ' ' + self.sanalista[i]
+                    indeksi = i
+                    break
+            if summa == 0:
+                if len(lause) > 30:
+                    break
+                indeksi = self.jatkavat[random.randint(0, len(self.jatkavat)-1)]
+                lause += ' ' + self.sanalista[indeksi]
+        return lause
+
+    def lue_tiedostot(self):
+        """Lukee tiedostoista lauseiden luomiseen tarvittavat sanalistat sekä todennäköisyystaulukon.
+
+        Returns:
+            4-tuple, jossa on kaksiulotteinen taulukko sanoista ja seuraavan sanan todennäköisyyksistä, lista kaikista sanoista, lista sanoista, jotka voivat aloittaa mietelauseen, sekä lista sanoista, jotka voivat aloittaa toisen lauseen mietelauseen sisällä. Jos jonkin tieoston lukeminen ei onnistunut, palautetaan Null.
+        """
+        try:
+            with open(todennakoisyydet.csv) as todennakoisyydet:
+                pass
+            with open(sanalista.csv) as sanalista:
+                pass
+            with open(ensimmaiset.csv) as ensimmaiset:
+                pass
+            with open(jatkavat.csv) as jatkavat:
+                pass
+        except:
+            return
+        return (0, 0, 0, 0)
