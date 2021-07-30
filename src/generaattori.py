@@ -7,7 +7,7 @@ class Generaattori:
     """Luokka, joka luo lauseita sanalistojen ja todennäköisyystaulukon avulla.
     """
 
-    def __init__(self, tiedostopolku='/home/emiander/Tiralabra/latteusgeneraattori/data/opetusdata.txt'):
+    def __init__(self, tiedostopolku='data/opetusdata.txt'):
         """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai niiden puuttuessa kutsuu sanalaskijan luomaan tarvittava data.
         """
 
@@ -32,14 +32,15 @@ class Generaattori:
             summa = 0
             for i, todennakoisyys in enumerate(self.todennakoisyystaulukko[indeksi]):
                 summa += todennakoisyys
-                if summa >= satunnainen and summa>0:
+                if summa >= satunnainen and summa > 0:
                     lause += ' ' + self.sanalista[i]
                     indeksi = i
                     break
             if summa == 0:
-                if len(lause) > 20 or len(self.jatkavat)<1:
+                if len(lause) > 30 or len(self.jatkavat) < 1:
                     break
-                indeksi = self.jatkavat[random.randint(0, len(self.jatkavat)-1)]
+                indeksi = self.jatkavat[random.randint(
+                    0, len(self.jatkavat)-1)]
                 lause += ' ' + self.sanalista[indeksi]
         return lause
 

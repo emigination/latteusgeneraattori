@@ -10,7 +10,8 @@ class TestGeneraattori(unittest.TestCase):
 
     def test_lause_tarpeeksi_pitka(self):
         with open(self.opetusdata.name, mode='w') as tiedosto:
-            tiedosto.write('Tämä on tekstiä, niin myös tämä, ja vielä tämäkin.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.')
+            tiedosto.write(
+                'Tämä on tekstiä, niin myös tämä, ja vielä tämäkin.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.')
         generaattori = Generaattori(self.opetusdata.name)
         self.assertGreater(len(generaattori.generoi()), 30)
 
@@ -18,4 +19,5 @@ class TestGeneraattori(unittest.TestCase):
         with open(self.opetusdata.name, mode='w') as tiedosto:
             tiedosto.write('Tämä on tekstiä.\nLorem ipsum.')
         generaattori = Generaattori(self.opetusdata.name)
-        self.assertIn(generaattori.generoi(), ('Tämä on tekstiä.', 'Lorem ipsum.'))
+        self.assertIn(generaattori.generoi(),
+                      ('Tämä on tekstiä.', 'Lorem ipsum.'))

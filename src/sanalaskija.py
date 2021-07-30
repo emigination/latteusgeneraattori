@@ -13,35 +13,15 @@ class Sanalaskija:
         self.todennakoisyydet = []
 
     def opettele(self, tiedostopolku):
-        """Käy opetusdatan läpi, luo listan sanoista, tallentaa sanat ja niiden indeksit trie-rakenteeseen ja laskee taulukon, jossa on todennäköisyydet millä mikäkin sana seuraa jotakin toista sanaa.
+        """Luo opetusdatasta generaattorin tarvitsemat tietorakenteet.
 
         Returns:
             4-tuple, jossa on kaksiulotteinen taulukko sanoista ja seuraavan sanan todennäköisyyksistä, lista kaikista sanoista, lista sanoista, jotka voivat aloittaa mietelauseen, sekä lista sanoista, jotka voivat aloittaa toisen lauseen mietelauseen sisällä.
         """
-        trie = Trie()
-        sanasanakirja = {}
-        maarat = {}
-        seuraavat = []
         data = self._lue_opetusdatatiedosto(tiedostopolku)
-        for rivi in data:
-            sanat = rivi.split(' ')
-            edellinen = None
-            for i, sana in enumerate(sanat):
-                if sana not in sanasanakirja:
-                    indeksi = len(self.sanalista)
-                    sanasanakirja[sana] = indeksi
-                    self.sanalista.append(sana)
-                    seuraavat.append([])
-                else:
-                    indeksi = sanasanakirja[sana]
-                if i==0:
-                    self.ensimmaiset.append(indeksi)
-                if edellinen:
-                    seuraavat[edellinen].append(indeksi)
-                    if self.sanalista[edellinen][len(self.sanalista[edellinen])-1] in ('.', '?', '!'):
-                        self.jatkavat.append(indeksi)
-                edellinen = indeksi
-        self.todennakoisyydet = self._laske_todennakoisyydet(seuraavat, len(self.sanalista))
+        seuraavat = self._laske_sanat(data)
+        self.todennakoisyydet = self._laske_todennakoisyydet(
+            seuraavat, len(self.sanalista))
         return (self.todennakoisyydet, self.sanalista, self.ensimmaiset, self.jatkavat)
 
     def _lue_opetusdatatiedosto(self, tiedostopolku):
@@ -56,6 +36,43 @@ class Sanalaskija:
                 rivi = rivi.replace("\n", "")
                 data.append(rivi)
         return data
+
+    def _laske_sanat(self, data):
+        """Käy opetusdatan läpi, luo listan sanoista, tallentaa sanat ja niiden indeksit trie-rakenteeseen ja listaa kutakin sanaa seuraavat sanat.
+
+        Args:
+            data: opetusdata listana lauseita
+
+        Returns:
+            seuraaavat: lista listoja, joka kertoo mitkä sanat seuraavat mitäkin sanaa. Sanat on tallennettu indekseinä.
+        """
+        trie = Trie()
+        sanasanakirja = {}
+        seuraavat = []
+        for rivi in data:
+            sanat = rivi.split(' ')
+            edellinen = -1
+            for i, sana in enumerate(sanat):
+                # print("i:", i)
+                if sana not in sanasanakirja:
+                    # print("sana ei sanakirjassa")
+                    indeksi = len(self.sanalista)
+                    sanasanakirja[sana] = indeksi
+                    self.sanalista.append(sana)
+                    seuraavat.append([])
+                else:
+                    indeksi = sanasanakirja[sana]
+                if i == 0:
+                    self.ensimmaiset.append(indeksi)
+                if edellinen!=-1:
+                    # print("on edellinen")
+                    seuraavat[edellinen].append(indeksi)
+                    if self.sanalista[edellinen][len(self.sanalista[edellinen])-1] in ('.', '?', '!'):
+                        self.jatkavat.append(indeksi)
+                edellinen = indeksi
+                # print("uusi edellinen:", edellinen)
+                # print("seuraavat:", seuraavat)
+        return seuraavat
 
     def _laske_todennakoisyydet(self, seuraavat, sanoja):
         """Luo sanoja seuraavien sanojen määrien perusteella todennäköisyystalukon.
