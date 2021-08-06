@@ -47,31 +47,27 @@ class Sanalaskija:
             seuraaavat: lista listoja, joka kertoo mitkä sanat seuraavat mitäkin sanaa. Sanat on tallennettu indekseinä.
         """
         trie = Trie()
-        sanasanakirja = {}
+        sanasetti = set()
         seuraavat = []
         for rivi in data:
             sanat = rivi.split(' ')
             edellinen = -1
             for i, sana in enumerate(sanat):
-                # print("i:", i)
-                if sana not in sanasanakirja:
-                    # print("sana ei sanakirjassa")
+                if sana not in sanasetti:
                     indeksi = len(self.sanalista)
-                    sanasanakirja[sana] = indeksi
+                    trie.lisaa(sana, indeksi)
                     self.sanalista.append(sana)
                     seuraavat.append([])
+                    sanasetti.add(sana)
                 else:
-                    indeksi = sanasanakirja[sana]
+                    indeksi = trie.hae_indeksi(sana)
                 if i == 0:
                     self.ensimmaiset.append(indeksi)
-                if edellinen!=-1:
-                    # print("on edellinen")
+                if edellinen > -1:
                     seuraavat[edellinen].append(indeksi)
                     if self.sanalista[edellinen][len(self.sanalista[edellinen])-1] in ('.', '?', '!'):
                         self.jatkavat.append(indeksi)
                 edellinen = indeksi
-                # print("uusi edellinen:", edellinen)
-                # print("seuraavat:", seuraavat)
         return seuraavat
 
     def _laske_todennakoisyydet(self, seuraavat, sanoja):
