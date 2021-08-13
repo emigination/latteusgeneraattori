@@ -1,36 +1,41 @@
+from solmu import Solmu
+
+
 class Trie:
     """Trie-tietorakenne sanojen ja niiden indeksien tallentamista varten.
     """
 
-    def __init__(self):
+    def __init__(self, aste=2):
         """Konstruktori, joka luo juureksi tyhjän sanakirjan.
         """
-        self.solmu = {}
+        self.aste = aste
+        self.juuri = Solmu()
 
-    def lisaa(self, sana, indeksi):
-        """Lisää sanan ja sen indeksin triehen.
-
-        Args:
-            sana: lisättävä sana merkkijonona
-            indeksi: sanan indeksi sanalistassa kokonaislukuna
-        """
-        solmu = self.solmu
-        for kirjain in sana:
-            if kirjain not in solmu:
-                solmu[kirjain] = {}
-            solmu = solmu[kirjain]
-        solmu['indeksi'] = indeksi
-
-    def hae_indeksi(self, sana):
-        """Hakee triestä sanan indeksin.
+    def lisaa(self, edelliset, seuraavasana):
+        """Lisää 'asteen' pituisen sanajonon ja sitä seuraavan sanan triehen.
 
         Args:
-            sana: haettava sana merkkijonona.
-
-        Returns:
-            indeksi: sanan indeksi sanalistassa int-tyyppisenä.
+            edelliset: 'asteen' määrä sanoja
+            sana: niitä seuraava sana
         """
-        solmu = self.solmu
-        for kirjain in sana:
-            solmu = solmu[kirjain]
-        return solmu['indeksi']
+        solmu = self.juuri
+        for sana in edelliset:
+            sana += ' '
+            for kirjain in sana:
+                if kirjain not in solmu.lapset:
+                    solmu.lapset[kirjain] = Solmu()
+                solmu = solmu.lapset[kirjain]
+        if seuraavasana not in solmu.sanat:
+            solmu.sanat[seuraavasana] = 1
+        else:
+            solmu.sanat[seuraavasana] += 1
+
+    def hae_seuraavat_sanat(self, sanajono):
+        solmu = self.juuri
+        for sana in sanajono:
+            sana += ' '
+            for kirjain in sana:
+                if kirjain not in solmu.lapset:
+                    return None
+                solmu = solmu.lapset[kirjain]
+        return solmu.sanat

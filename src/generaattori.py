@@ -25,6 +25,7 @@ class Generaattori:
         Returns:
             Valmis mietelause merkkijonona.
         """
+        ensimmainen_sana = random.choice(self.ensimmaiset)
         indeksi = self.ensimmaiset[random.randint(0, len(self.ensimmaiset)-1)]
         lause = self.sanalista[indeksi]
         while len(lause) < 200:
