@@ -8,13 +8,21 @@ class Sanalaskija:
     """
 
     def __init__(self, aste=2):
+        """Konstruktori, jossa asetetaan käytettävien Markovin ketjujen aste.
+
+        Args:
+            aste: kokonaisluku, oletuksena 2.
+        """
         self.aste = aste
 
     def opettele(self, tiedostopolku):
         """Luo opetusdatasta generaattorin tarvitsemat tietorakenteet.
 
+        Args:
+            tiedostopolku: polku, josta luettevat lauseet haetaan
+
         Returns:
-            4-tuple, jossa on kaksiulotteinen taulukko sanoista ja seuraavan sanan todennäköisyyksistä, lista kaikista sanoista, lista sanoista, jotka voivat aloittaa mietelauseen, sekä lista sanoista, jotka voivat aloittaa toisen lauseen mietelauseen sisällä.
+            3-tuple, jossa sanat trie-rakenteessa, mietelauseen aloittavien sanojen joukko ja pisteen jälkeen mietelausetta jatkavien sanojen joukko.
         """
         data = self._lue_opetusdatatiedosto(tiedostopolku)
         tulos = self._laske_sanat(data)
@@ -23,8 +31,11 @@ class Sanalaskija:
     def _lue_opetusdatatiedosto(self, tiedostopolku):
         """Lukee opetusdatan ja luo siitä listan.
 
+        Args:
+            tiedostopolku: polku, josta luettevat lauseet haetaan
+
         Returns:
-            Opetusdatan lauseet listana
+            opetusdatan lauseet listana.
         """
         with io.open(tiedostopolku, encoding='utf-8') as tiedosto:
             data = []
@@ -40,7 +51,9 @@ class Sanalaskija:
             data: opetusdata listana lauseita
 
         Returns:
-            seuraaavat: lista listoja, joka kertoo mitkä sanat seuraavat mitäkin sanaa. Sanat on tallennettu indekseinä.
+            trie: trie-tietorakenne, jossa on tieto sanojen seuraajista ja niiden määristä
+            ensimmaiset: mietelauseen aloittavien sanojen joukko
+            jatkavat: pisteen jälkeen mietelausetta jatkavien sanojen joukko.
         """
         trie = Trie()
         ensimmaiset = set()
@@ -59,22 +72,6 @@ class Sanalaskija:
                         jatkavat.add(sana)
                 edelliset.append(sana)
         return (trie, ensimmaiset, jatkavat)
-
-    def _laske_todennakoisyydet(self, seuraavat, sanoja):
-        """Luo sanoja seuraavien sanojen määrien perusteella todennäköisyystalukon.
-
-        Args:
-            seuraavat: lista listoja, joissa on kutakin sanaa seuraavien sanojen indeksit
-            sanoja: eri sanojen määrä aineistossa
-
-        Returns:
-            kaksiuloitteinen taulukko todennäköisyyksiä, jossa rivi vastaa sanan indeksiä ja sarake sitä seuraavan sanan indeksiä.
-        """
-        todennakoisyydet = [[0 for i in range(sanoja)] for j in range(sanoja)]
-        for i, sana in enumerate(seuraavat):
-            for seuraava in sana:
-                todennakoisyydet[i][seuraava] += 1/len(sana)
-        return todennakoisyydet
 
     def _tallenna_tiedostoon(self):
         pass

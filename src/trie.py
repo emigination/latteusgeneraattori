@@ -5,10 +5,9 @@ class Trie:
     """Trie-tietorakenne sanojen ja niiden indeksien tallentamista varten.
     """
 
-    def __init__(self, aste=2):
+    def __init__(self):
         """Konstruktori, joka luo juureksi tyhjän sanakirjan.
         """
-        self.aste = aste
         self.juuri = Solmu()
 
     def lisaa(self, edelliset, seuraavasana):
@@ -16,7 +15,7 @@ class Trie:
 
         Args:
             edelliset: 'asteen' määrä sanoja
-            sana: niitä seuraava sana
+            sana: niitä seuraava sana.
         """
         solmu = self.juuri
         for sana in edelliset:
@@ -31,6 +30,14 @@ class Trie:
             solmu.sanat[seuraavasana] += 1
 
     def hae_seuraavat_sanat(self, sanajono):
+        """Hakee annettua sanajonoa seuraavat sanat ja niiden määrät sanajonon seuraajana.
+
+        Args:
+            sanajono: lista sanoista, joiden seuraajia haetaan.
+
+        Returns:
+            sanakirja, jossa on avaimina mahdolliset seuraavat sanat ja arvoina niiden määrät.
+        """
         solmu = self.juuri
         for sana in sanajono:
             sana += ' '
