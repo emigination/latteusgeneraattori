@@ -132,3 +132,4 @@ dmypy.json
 opetusdata.py
 .idea/
 .vscode/
+data/testidata.txt

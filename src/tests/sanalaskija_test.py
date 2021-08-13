@@ -19,13 +19,28 @@ class TestSanalaskija(unittest.TestCase):
 
     def test_aloitussanat_oikein(self):
         aloitussanat = self.sanalaskija.opettele(self.opetusdata.name)[1]
-        self.assertEqual(aloitussanat, {'Tämä', 'Vähän', 'Lorem'})
+        self.assertEqual(
+            aloitussanat, {('Tämä', 'on'), ('Lorem', 'ipsum'), ('Vähän', 'lisää')})
 
-    def test_jatkavat_sanat_oikein(self):
-        jatkavat_sanat = self.sanalaskija.opettele(self.opetusdata.name)[2]
-        self.assertEqual(jatkavat_sanat, {'Consectetur'})
+    # def test_jatkavat_sanat_oikein(self):
+    #     jatkavat_sanat = self.sanalaskija.opettele(self.opetusdata.name)[2]
+    #     self.assertEqual(jatkavat_sanat, {'Consectetur'})
 
     def test_trie_rakennettu_oikein(self):
         seuraavat = self.sanalaskija.opettele(self.opetusdata.name)[
             0].hae_seuraavat_sanat(['ipsum', 'dolor'])
         self.assertEqual(seuraavat, {'sit': 1})
+
+    def test_trie_oikein_neljannella_asteella(self):
+        uusisanalaskija = Sanalaskija(4)
+        seuraavat = uusisanalaskija.opettele(self.opetusdata.name)[
+            0].hae_seuraavat_sanat(['Lorem', 'ipsum', 'dolor', 'sit'])
+        self.assertEqual(seuraavat, {'amet.': 1})
+
+    def test_trie_pidempi_aineisto(self):
+        with open(self.opetusdata.name, mode='w') as tiedosto:
+            tiedosto.write(
+                'Lorem ipsum dolor. Lorem ipsum agfsad. Lorem ipsum fsdgf. Lorem ipsum hhhh.')
+        seuraavat = self.sanalaskija.opettele(self.opetusdata.name)[
+            0].hae_seuraavat_sanat(['Lorem', 'ipsum'])
+        self.assertIn('dolor.', seuraavat)

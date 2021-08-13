@@ -1,4 +1,5 @@
 import random
+from collections import deque
 import io
 from sanalaskija import Sanalaskija
 
@@ -7,17 +8,16 @@ class Generaattori:
     """Luokka, joka luo lauseita sanalistojen ja todennäköisyystaulukon avulla.
     """
 
-    def __init__(self, tiedostopolku='data/opetusdata.txt'):
+    def __init__(self, aste=1, tiedostopolku='data/opetusdata.txt'):
         """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai niiden puuttuessa kutsuu sanalaskijan luomaan tarvittava data.
         """
-
-        data = self.lue_tiedostot()
+        self.aste = aste
+        data = self._lue_tiedostot()
         if not data:
-            data = Sanalaskija().opettele(tiedostopolku)
-        self.todennakoisyystaulukko = data[0]
-        self.sanalista = data[1]
-        self.ensimmaiset = data[2]
-        self.jatkavat = data[3]
+            data = Sanalaskija(self.aste).opettele(tiedostopolku)
+        self.trie = data[0]
+        self.ensimmaiset = data[1]
+        # self.jatkavat = data[2]
 
     def generoi(self):
         """Luo lauseita Markovin ketjun avulla.
@@ -25,27 +25,55 @@ class Generaattori:
         Returns:
             Valmis mietelause merkkijonona.
         """
-        ensimmainen_sana = random.choice(self.ensimmaiset)
-        indeksi = self.ensimmaiset[random.randint(0, len(self.ensimmaiset)-1)]
-        lause = self.sanalista[indeksi]
-        while len(lause) < 200:
-            satunnainen = random.random()
+        edelliset = random.choice(list(self.ensimmaiset))
+        sanat = []
+        for sana in edelliset:
+            sanat.append(sana)
+        edelliset = deque(edelliset)
+        while len(sanat) < 20:
+            seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
+            if not seuraavat and len(sanat) > 3 and random.random() < 0.3:
+                break
+            while not seuraavat:
+                edelliset = deque(random.choice(list(self.ensimmaiset)))
+                for sana in edelliset:
+                    sanat.append(sana)
+                seuraavat = self.trie.hae_seuraavat_sanat(edelliset)
             summa = 0
-            for i, todennakoisyys in enumerate(self.todennakoisyystaulukko[indeksi]):
-                summa += todennakoisyys
-                if summa >= satunnainen and summa > 0:
-                    lause += ' ' + self.sanalista[i]
-                    indeksi = i
+            for maara in seuraavat.values():
+                summa += maara
+            satunnainen = random.randint(0, summa)
+            summa = 0
+            for sana, maara in seuraavat.items():
+                summa += maara
+                if summa >= satunnainen:
+                    seuraava = sana
                     break
-            if summa == 0:
-                if len(lause) > 30 or len(self.jatkavat) < 1:
-                    break
-                indeksi = self.jatkavat[random.randint(
-                    0, len(self.jatkavat)-1)]
-                lause += ' ' + self.sanalista[indeksi]
+            sanat.append(seuraava)
+            edelliset.popleft()
+            edelliset.append(seuraava)
+        lause = self._muuta_merkkijonoksi(sanat)
         return lause
 
-    def lue_tiedostot(self):
+    def _muuta_merkkijonoksi(self, sanalista):
+        """Muuttaa sanalistan merkkijonoksi eli valmiiksi lauseeksi.
+
+        Args:
+            sanalista: lauseeseen tulevat sanat
+
+        Returns:
+            lause merkkijonona.
+        """
+        lause = ''
+        for sana in sanalista[:len(sanalista)-1]:
+            lause += sana
+            lause += ' '
+        lause += sanalista[len(sanalista)-1]
+        if lause[len(lause)-1] not in ('.', '!', '?'):
+            lause += '.'
+        return lause
+
+    def _lue_tiedostot(self):
         """Lukee tiedostoista lauseiden luomiseen tarvittavat sanalistat sekä todennäköisyystaulukon.
 
         Returns:

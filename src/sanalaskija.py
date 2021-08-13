@@ -57,21 +57,27 @@ class Sanalaskija:
         """
         trie = Trie()
         ensimmaiset = set()
-        jatkavat = set()
+        # jatkavat = set()
         for rivi in data:
             sanat = rivi.split(' ')
-            ensimmaiset.add(sanat[0])
+            # alku = ''
+            # for sana in sanat[0:self.aste]:
+            #     alku += sana + ' '
+            # alku += sana + ' ' for sana in sanat[0:self.aste]
+            ensimmaiset.add(tuple(sanat[0:self.aste]))
             edelliset = deque([])
             for i, sana in enumerate(sanat):
                 if i >= self.aste:
-                    trie.lisaa(edelliset, sana)
+                    trie.lisaa(list(edelliset), sana)
+                    # edellinen = edelliset[self.aste-1]
+                    # if edellinen[len(edellinen)-1] in ('.', '?', '!'):
+                    #     jatko = ''
+                    #     for sana in edelliset:
+                    #         jatko += sana + ' '
+                    #     jatkavat.add(jatko)
                     edelliset.popleft()
-                if len(edelliset) > 0:
-                    edellinen = edelliset[len(edelliset)-1]
-                    if edellinen[len(edellinen)-1] in ('.', '?', '!'):
-                        jatkavat.add(sana)
                 edelliset.append(sana)
-        return (trie, ensimmaiset, jatkavat)
+        return (trie, ensimmaiset)
 
     def _tallenna_tiedostoon(self):
         pass
