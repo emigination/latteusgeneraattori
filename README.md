@@ -9,3 +9,5 @@
 [Viikkoraportti 2](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/viikkoraportti2.md)
 
 [Viikkoraportti 3](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/viikkoraportti3.md)
+
+[Viikkoraportti 4](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/viikkoraportti4.md)
