@@ -1,6 +1,15 @@
 # Latteusgeneraattori
 [![codecov](https://codecov.io/gh/emigination/latteusgeneraattori/branch/main/graph/badge.svg?token=PSNX904CU4)](https://codecov.io/gh/emigination/latteusgeneraattori)
 
+## Dokumentaatio
+
+[Käyttöohje](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/kayttoohje.md)
+
+[Määrittelydokumentti](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/maarittelydokumentti.md)
+
+[Toteutusdokumentti](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/toteutusdokumentti.md)
+
+[Testausdokumentti](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/testausdokumentti.md)
 
 ## Viikkoraportit
 
