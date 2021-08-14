@@ -5,11 +5,11 @@ from sanalaskija import Sanalaskija
 
 
 class Generaattori:
-    """Luokka, joka luo lauseita sanalistojen ja todennäköisyystaulukon avulla.
+    """Luokka, joka luo lauseita triehen tallennettujen sanojen ja niiden esiintymistiheyksien perusteella.
     """
 
     def __init__(self, aste=1, tiedostopolku='data/opetusdata.txt'):
-        """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai niiden puuttuessa kutsuu sanalaskijan luomaan tarvittava data.
+        """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai niiden puuttuessa kutsuu sanalaskijan luomaan tarvittavan datan.
         """
         self.aste = aste
         data = self._lue_tiedostot()
@@ -59,10 +59,10 @@ class Generaattori:
         """Muuttaa sanalistan merkkijonoksi eli valmiiksi lauseeksi.
 
         Args:
-            sanalista: lauseeseen tulevat sanat
+            sanalista: lauseeseen tulevat sanat.
 
         Returns:
-            lause merkkijonona.
+            Lause merkkijonona.
         """
         lause = ''
         for sana in sanalista[:len(sanalista)-1]:
@@ -74,20 +74,21 @@ class Generaattori:
         return lause
 
     def _lue_tiedostot(self):
-        """Lukee tiedostoista lauseiden luomiseen tarvittavat sanalistat sekä todennäköisyystaulukon.
+        return
+        # """Lukee tiedostoista lauseiden luomiseen tarvittavat sanalistat sekä todennäköisyystaulukon.
 
-        Returns:
-            4-tuple, jossa on kaksiulotteinen taulukko sanoista ja seuraavan sanan todennäköisyyksistä, lista kaikista sanoista, lista sanoista, jotka voivat aloittaa mietelauseen, sekä lista sanoista, jotka voivat aloittaa toisen lauseen mietelauseen sisällä. Jos jonkin tieoston lukeminen ei onnistunut, palautetaan Null.
-        """
-        try:
-            with open(todennakoisyydet.csv) as todennakoisyydet:
-                pass
-            with open(sanalista.csv) as sanalista:
-                pass
-            with open(ensimmaiset.csv) as ensimmaiset:
-                pass
-            with open(jatkavat.csv) as jatkavat:
-                pass
-        except:
-            return
-        return (0, 0, 0, 0)
+        # Returns:
+        #     4-tuple, jossa on kaksiulotteinen taulukko sanoista ja seuraavan sanan todennäköisyyksistä, lista kaikista sanoista, lista sanoista, jotka voivat aloittaa mietelauseen, sekä lista sanoista, jotka voivat aloittaa toisen lauseen mietelauseen sisällä. Jos jonkin tieoston lukeminen ei onnistunut, palautetaan Null.
+        # """
+        # try:
+        #     with open(todennakoisyydet.csv) as todennakoisyydet:
+        #         pass
+        #     with open(sanalista.csv) as sanalista:
+        #         pass
+        #     with open(ensimmaiset.csv) as ensimmaiset:
+        #         pass
+        #     with open(jatkavat.csv) as jatkavat:
+        #         pass
+        # except:
+        #     return
+        # return (0, 0, 0, 0)

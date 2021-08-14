@@ -2,11 +2,11 @@ from solmu import Solmu
 
 
 class Trie:
-    """Trie-tietorakenne sanojen ja niiden indeksien tallentamista varten.
+    """Trie-tietorakenne sanayhdistlemien, niitä seuraavien sanojen ja sanojen esiintymismäärien tallentamista varten.
     """
 
     def __init__(self):
-        """Konstruktori, joka luo juureksi tyhjän sanakirjan.
+        """Konstruktori, joka luo juurisolmun.
         """
         self.juuri = Solmu()
 
