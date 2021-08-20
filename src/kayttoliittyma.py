@@ -7,12 +7,10 @@ class Kayttoliittyma:
         self.generaattori = Generaattori()
 
     def kaynnista(self):
-        print("Tervetuloa latteusgeneraattoriin.")
-        print("Paina enter luodaksesi miete- tai voimalause, jolla voit pilata päiväsi tai jonkun muun päivän.")
-        print("Lopeta syöttämällä 0.")
+        print("Tervetuloa latteusgeneraattoriin, joka luo miete- tai voimalauseen, jolla voit pilata päiväsi tai jonkun muun päivän.")
         while(True):
-            # teema = input("Syötä haluamasi teema tai lopeta syöttämällä 0: ")
-            teema = input()
+            print("Syötä haluamasi teema tai luo satunnainen latteus painamalla vain enter. Lopeta syöttämällä 0.")
+            teema = input("Teema: ")
             if teema == '0':
                 break
-            print(self.generaattori.generoi())
+            print(self.generaattori.generoi(teema))

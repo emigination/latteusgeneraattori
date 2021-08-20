@@ -19,14 +19,22 @@ class Generaattori:
         self.ensimmaiset = data[1]
         # self.jatkavat = data[2]
 
-    def generoi(self):
+    def generoi(self, teema=None):
         """Luo lauseita Markovin ketjun avulla.
 
         Returns:
             Valmis mietelause merkkijonona.
         """
-        edelliset = random.choice(list(self.ensimmaiset))
         sanat = []
+        if teema and self.aste<2:
+            if self.trie.hae_seuraavat_sanat([teema]):
+                edelliset = [teema]
+            else:
+                sanat.append(teema)
+                seuraavat_sanat = ["on", "on", "ei", "ei", "tulee", "pysyy", "odottaa", "voi", "tuntee", "tahtoo", "näkee"]
+                edelliset = [random.choice(seuraavat_sanat)]
+        else:
+            edelliset = random.choice(self.ensimmaiset)
         for sana in edelliset:
             sanat.append(sana)
         edelliset = deque(edelliset)
@@ -35,10 +43,10 @@ class Generaattori:
             if not seuraavat and len(sanat) > 3 and random.random() < 0.3:
                 break
             while not seuraavat:
-                edelliset = deque(random.choice(list(self.ensimmaiset)))
+                edelliset = deque(random.choice(self.ensimmaiset))
                 for sana in edelliset:
                     sanat.append(sana)
-                seuraavat = self.trie.hae_seuraavat_sanat(edelliset)
+                seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
             summa = 0
             for maara in seuraavat.values():
                 summa += maara

@@ -40,9 +40,12 @@ class Trie:
         """
         solmu = self.juuri
         for sana in sanajono:
+            # print(sana)
             sana += ' '
             for kirjain in sana:
+                # print(kirjain)
                 if kirjain not in solmu.lapset:
+                    # print('ei o')
                     return None
                 solmu = solmu.lapset[kirjain]
         return solmu.sanat

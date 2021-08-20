@@ -52,15 +52,15 @@ class Sanalaskija:
 
         Returns:
             trie: trie-tietorakenne, jossa on tieto sanojen seuraajista ja niiden määristä.
-            ensimmaiset: mietelauseen aloittavien sanojen joukko.
+            ensimmaiset: mietelauseen aloittavien sanojen lista.
             (jatkavat: pisteen jälkeen mietelausetta jatkavien sanojen joukko.)
         """
         trie = Trie()
-        ensimmaiset = set()
+        ensimmaiset = []
         # jatkavat = set()
         for rivi in data:
             sanat = rivi.split(' ')
-            ensimmaiset.add(tuple(sanat[0:self.aste]))
+            ensimmaiset.append(sanat[0:self.aste])
             edelliset = deque([])
             for i, sana in enumerate(sanat):
                 if i >= self.aste:
