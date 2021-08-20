@@ -44,3 +44,9 @@ class TestGeneraattori(unittest.TestCase):
             tiedosto.write('Tämä on tekstiä.\nLorem ipsum dolor.')
         lause = Generaattori(2, self.opetusdata.name).generoi()
         self.assertIn(lause[:15], 'Tämä on tekstiä.\nLorem ipsum dolor.')
+
+    def test_lause_oikein_kun_teema_loytyy_triesta(self):
+        with open(self.opetusdata.name, mode='w') as tiedosto:
+            tiedosto.write('Tämä on tekstiä.\nLorem ipsum dolor.')
+        lause = Generaattori(1, self.opetusdata.name).generoi('Tämä')
+        self.assertIn('Tämä on tekstiä.', lause)
