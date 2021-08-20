@@ -13,8 +13,8 @@ class TestGeneraattori(unittest.TestCase):
             tiedosto.write(
                 'Tämä on tekstiä, niin myös tämä, ja vielä tämäkin.\n' +
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
-        generaattori = Generaattori(2, self.opetusdata.name)
-        self.assertGreater(len(generaattori.generoi()), 20)
+        lause = Generaattori(2, self.opetusdata.name).generoi()
+        self.assertGreater(len(lause), 20)
 
     def test_lause_tarpeeksi_lyhyt(self):
         with open(self.opetusdata.name, mode='w') as tiedosto:
@@ -36,8 +36,8 @@ class TestGeneraattori(unittest.TestCase):
                 'move in demand to have some of whatever the human is ' +
                 'cooking, then sniff the offering and walk away yet pushes ' +
                 'butt to face for cat sit like bread.')
-        generaattori = Generaattori(2, self.opetusdata.name)
-        self.assertLess(len(generaattori.generoi()), 240)
+        lause = Generaattori(2, self.opetusdata.name).generoi()
+        self.assertLess(len(lause), 240)
 
     def test_lause_noudattaa_markovin_ketjua(self):
         with open(self.opetusdata.name, mode='w') as tiedosto:
@@ -60,3 +60,11 @@ class TestGeneraattori(unittest.TestCase):
         lause = Generaattori(1, self.opetusdata.name).generoi('T')
         self.assertIn(
             lause[:8], ['T on tek', 'T ei ole', 'T tulee ', 'T pysyy ', 'T odotta', 'T voi sa', 'T tuntee', 'T tahtoo', 'T näkee '])
+
+    def test_lause_jatkuu_pisteen_jalkeen(self):
+        with open(self.opetusdata.name, mode='w') as tiedosto:
+            tiedosto.write(
+                'Tämä on tekstiä. Niin myös tämä.\n' +
+                'Lorem ipsum dolor. Niin on.')
+        lause = Generaattori(2, self.opetusdata.name).generoi()
+        self.assertIn('. Niin', lause)
