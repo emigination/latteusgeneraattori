@@ -50,3 +50,13 @@ class TestGeneraattori(unittest.TestCase):
             tiedosto.write('Tämä on tekstiä.\nLorem ipsum dolor.')
         lause = Generaattori(1, self.opetusdata.name).generoi('Tämä')
         self.assertIn('Tämä on tekstiä.', lause)
+
+    def test_lause_oikein_kun_uusi_teema(self):
+        with open(self.opetusdata.name, mode='w') as tiedosto:
+            tiedosto.write('Tämä on tekstiä.\nLorem ipsum dolor.\n' +
+                           'Tämä ei ole kissa.\nKesä tulee joka vuosi.\nKissa pysyy jossain.' +
+                           '\nJoku odottaa sitä.\nHuomenna voi sataa.\nJoku tuntee jotain.' +
+                           'Koira tahtoo ulos.\nPöllö näkee pimeässä.')
+        lause = Generaattori(1, self.opetusdata.name).generoi('T')
+        self.assertIn(
+            lause[:8], ['T on tek', 'T ei ole', 'T tulee ', 'T pysyy ', 'T odotta', 'T voi sa', 'T tuntee', 'T tahtoo', 'T näkee '])

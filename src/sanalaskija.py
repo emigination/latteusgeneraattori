@@ -26,7 +26,7 @@ class Sanalaskija:
         """
         data = self._lue_opetusdatatiedosto(tiedostopolku)
         tulos = self._laske_sanat(data)
-        return(tulos)
+        return tulos
 
     def _lue_opetusdatatiedosto(self, tiedostopolku):
         """Lukee opetusdatan ja luo siitä listan.
@@ -45,7 +45,9 @@ class Sanalaskija:
         return data
 
     def _laske_sanat(self, data):
-        """Käy opetusdatan läpi, tallentaa "asteen" pituiset sanayhdistelmät ja niitä seuraavat sanat määrineen triehen ja listaa sanayhdistelmät, jotka voivat aloittaa lausahduksen.
+        """Käy opetusdatan läpi, tallentaa "asteen" pituiset sanayhdistelmät ja
+        niitä seuraavat sanat määrineen triehen ja listaa sanayhdistelmät, jotka
+        voivat aloittaa lausahduksen tai jatkaa lausahdusta virkkeen päätyttyä.
 
         Args:
             data: opetusdata listana lauseita.
@@ -53,25 +55,24 @@ class Sanalaskija:
         Returns:
             trie: trie-tietorakenne, jossa on tieto sanojen seuraajista ja niiden määristä.
             ensimmaiset: mietelauseen aloittavien sanojen lista.
-            (jatkavat: pisteen jälkeen mietelausetta jatkavien sanojen joukko.)
+            jatkavat: pisteen jälkeen mietelausetta jatkavien sanojen joukko.
         """
         trie = Trie()
         ensimmaiset = []
-        # jatkavat = set()
+        jatkavat = []
         for rivi in data:
             sanat = rivi.split(' ')
-            ensimmaiset.append(sanat[0:self.aste])
+            ensimmaiset.append(sanat[:self.aste])
             edelliset = deque([])
             for i, sana in enumerate(sanat):
-                if i >= self.aste:
+                if len(edelliset) >= self.aste:
                     trie.lisaa(list(edelliset), sana)
-                    # edellinen = edelliset[self.aste-1]
-                    # if edellinen[len(edellinen)-1] in ('.', '?', '!'):
-                    #     jatko = ''
-                    #     jatkavat.add(sana)
                     edelliset.popleft()
+                    if sana[len(sana)-1] in ('.', '?', '!') and len(sanat) > i+self.aste:
+                        edelliset = deque([])
+                        jatkavat.append(sanat[i+1:i+self.aste+1])
                 edelliset.append(sana)
-        return (trie, ensimmaiset)
+        return (trie, ensimmaiset, jatkavat)
 
-    def _tallenna_tiedostoon(self):
-        pass
+    # def _tallenna_tiedostoon(self):
+    #     pass

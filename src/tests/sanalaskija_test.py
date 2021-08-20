@@ -22,9 +22,9 @@ class TestSanalaskija(unittest.TestCase):
         self.assertEqual(
             aloitussanat, [['Tämä', 'on'], ['Vähän', 'lisää'], ['Lorem', 'ipsum']])
 
-    # def test_jatkavat_sanat_oikein(self):
-    #     jatkavat_sanat = self.sanalaskija.opettele(self.opetusdata.name)[2]
-    #     self.assertEqual(jatkavat_sanat, {'Consectetur'})
+    def test_jatkavat_sanat_oikein(self):
+        jatkavat_sanat = self.sanalaskija.opettele(self.opetusdata.name)[2]
+        self.assertEqual(jatkavat_sanat, [['Consectetur', 'adipiscing']])
 
     def test_trie_rakennettu_oikein(self):
         seuraavat = self.sanalaskija.opettele(self.opetusdata.name)[
