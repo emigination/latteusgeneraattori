@@ -60,6 +60,7 @@ class Sanalaskija:
         trie = Trie()
         ensimmaiset = []
         jatkavat = []
+        tarkistustrie = Trie()
         for rivi in data:
             sanat = rivi.split(' ')
             ensimmaiset.append(sanat[:self.aste])
@@ -72,7 +73,5 @@ class Sanalaskija:
                         edelliset = deque([])
                         jatkavat.append(sanat[i+1:i+self.aste+1])
                 edelliset.append(sana)
-        return (trie, ensimmaiset, jatkavat)
-
-    # def _tallenna_tiedostoon(self):
-    #     pass
+            tarkistustrie.lisaa([rivi], 'loppu')
+        return (trie, ensimmaiset, jatkavat, tarkistustrie)

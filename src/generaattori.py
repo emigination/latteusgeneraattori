@@ -14,12 +14,19 @@ class Generaattori:
         niiden puuttuessa kutsuu sanalaskijan luomaan tarvittavan datan.
         """
         self.aste = aste
-        data = self._lue_tiedostot()
-        if not data:
-            data = Sanalaskija(self.aste).opettele(tiedostopolku)
+        self.tiedostopolku = tiedostopolku
+        self.trie = None
+        self.ensimmaiset = None
+        self.jatkavat = None
+        self.tarkistustrie = None
+        self._alusta()
+
+    def _alusta(self):
+        data = Sanalaskija(self.aste).opettele(self.tiedostopolku)
         self.trie = data[0]
         self.ensimmaiset = data[1]
         self.jatkavat = data[2]
+        self.tarkistustrie = data[3]
 
     def generoi(self, aste=None, teema=None):
         """Luo lauseita Markovin ketjun avulla.
@@ -27,36 +34,40 @@ class Generaattori:
         Returns:
             Valmis mietelause merkkijonona.
         """
-        if aste:
+        if aste and aste!=self.aste:
             self.aste = aste
-        sanat = self._valitse_aloitussanat(teema)
-        edelliset = deque(sanat[len(sanat)-self.aste:])
-        while len(sanat) < 20:
-            seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
-            if not seuraavat:
-                if len(self.jatkavat) < 1:
-                    break
-                if len(sanat) > 3 and random.random() < (0.1*len(sanat)):
-                    break
-            while not seuraavat:
-                edelliset = deque(random.choice(self.jatkavat))
-                for sana in edelliset:
-                    sanat.append(sana)
+            self._alusta()
+        ei_suoraan_aineistosta = False
+        while not ei_suoraan_aineistosta:
+            sanat = self._valitse_aloitussanat(teema)
+            edelliset = deque(sanat[len(sanat)-self.aste:])
+            while len(sanat) < 20:
                 seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
-            summa = 0
-            for maara in seuraavat.values():
-                summa += maara
-            satunnainen = random.randint(0, summa)
-            summa = 0
-            for sana, maara in seuraavat.items():
-                summa += maara
-                if summa >= satunnainen:
-                    seuraava = sana
-                    break
-            sanat.append(seuraava)
-            edelliset.popleft()
-            edelliset.append(seuraava)
-        lause = self._muuta_merkkijonoksi(sanat)
+                if not seuraavat:
+                    if len(self.jatkavat) < 1:
+                        break
+                    if len(sanat) > 3 and random.random() < (0.1*len(sanat)):
+                        break
+                while not seuraavat:
+                    edelliset = deque(random.choice(self.jatkavat))
+                    for sana in edelliset:
+                        sanat.append(sana)
+                    seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
+                summa = 0
+                for maara in seuraavat.values():
+                    summa += maara
+                satunnainen = random.randint(0, summa)
+                summa = 0
+                for sana, maara in seuraavat.items():
+                    summa += maara
+                    if summa >= satunnainen:
+                        seuraava = sana
+                        break
+                sanat.append(seuraava)
+                edelliset.popleft()
+                edelliset.append(seuraava)
+            lause = self._muuta_merkkijonoksi(sanat)
+            ei_suoraan_aineistosta = self._tarkista_lauseen_alkuperaisyys(lause)
         return lause
 
     def _valitse_aloitussanat(self, teema=None):
@@ -101,27 +112,8 @@ class Generaattori:
             lause += '.'
         return lause
 
-    def _lue_tiedostot(self):
-        return
-        # """Lukee tiedostoista lauseiden luomiseen tarvittavat sanalistat sekä
-        # todennäköisyystaulukon.
-
-        # Returns:
-        #     4-tuple, jossa on kaksiulotteinen taulukko sanoista ja seuraavan
-        # sanan todennäköisyyksistä, lista kaikista sanoista, lista sanoista,
-        # jotka voivat aloittaa mietelauseen, sekä lista sanoista, jotka voivat
-        # aloittaa toisen lauseen mietelauseen sisällä. Jos jonkin tieoston
-        # lukeminen ei onnistunut, palautetaan Null.
-        # """
-        # try:
-        #     with open(todennakoisyydet.csv) as todennakoisyydet:
-        #         pass
-        #     with open(sanalista.csv) as sanalista:
-        #         pass
-        #     with open(ensimmaiset.csv) as ensimmaiset:
-        #         pass
-        #     with open(jatkavat.csv) as jatkavat:
-        #         pass
-        # except:
-        #     return
-        # return (0, 0, 0, 0)
+    def _tarkista_lauseen_alkuperaisyys(self, lause):
+        tarkistus = self.tarkistustrie.hae_seuraavat_sanat(lause)
+        if tarkistus:
+            return False
+        return True
