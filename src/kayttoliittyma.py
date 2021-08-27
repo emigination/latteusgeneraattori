@@ -9,10 +9,14 @@ class Kayttoliittyma:
     def kaynnista(self):
         print('Tervetuloa latteusgeneraattoriin, joka luo miete- tai ' +
         'voimalauseen, jolla voit pilata päiväsi tai jonkun muun päivän.')
-        while True:
-            print('Syötä haluamasi teema tai luo satunnainen latteus ' +
+        print('Syötä haluamasi teema tai luo satunnainen latteus ' +
             'jättämällä teema tyhjäksi ja painamalla enter. Lopeta syöttämällä 0.')
-            teema = input('Teema: ')
+        while True:
+            teema = input('Teema (lopeta syöttämällä 0): ')
             if teema == '0':
                 break
-            print(self.generaattori.generoi(teema))
+            aste = ''
+            while not aste.isnumeric() or int(aste)<1:
+                aste = input('Anna Markovin ketjujen aste, 1 tai 2: ')
+            print(self.generaattori.generoi(int(aste), teema))
+

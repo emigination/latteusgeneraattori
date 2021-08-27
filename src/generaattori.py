@@ -21,12 +21,14 @@ class Generaattori:
         self.ensimmaiset = data[1]
         self.jatkavat = data[2]
 
-    def generoi(self, teema=None):
+    def generoi(self, aste=None, teema=None):
         """Luo lauseita Markovin ketjun avulla.
 
         Returns:
             Valmis mietelause merkkijonona.
         """
+        if aste:
+            self.aste = aste
         sanat = self._valitse_aloitussanat(teema)
         edelliset = deque(sanat[len(sanat)-self.aste:])
         while len(sanat) < 20:
