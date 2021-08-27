@@ -22,3 +22,5 @@
 [Viikkoraportti 4](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/viikkoraportti4.md)
 
 [Viikkoraportti 5](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/viikkoraportti5.md)
+
+[Viikkoraportti 6](https://github.com/emigination/latteusgeneraattori/blob/main/viikkoraportit/viikkoraportti6.md)
