@@ -1,3 +1,4 @@
+import random
 from solmu import Solmu
 
 
@@ -15,7 +16,7 @@ class Trie:
         """Lisää 'asteen' pituisen sanajonon ja sitä seuraavan sanan triehen.
 
         Args:
-            edelliset: 'asteen' määrä sanoja
+            edelliset: 'asteen' määrä sanoja listana
             sana: niitä seuraava sana.
         """
         solmu = self.juuri
@@ -31,7 +32,8 @@ class Trie:
             solmu.sanat[seuraavasana] += 1
 
     def hae_seuraavat_sanat(self, sanajono):
-        """Hakee annettua sanajonoa seuraavat sanat ja niiden määrät sanajonon seuraajana.
+        """Hakee annettua sanajonoa seuraavat sanat ja niiden määrät sanajonon
+        seuraajana.
 
         Args:
             sanajono: lista sanoista, joiden seuraajia haetaan.
@@ -47,3 +49,32 @@ class Trie:
                     return None
                 solmu = solmu.lapset[kirjain]
         return solmu.sanat
+
+    def hae_satunnainen(self, alkukirjain=None):
+        """Noutaa satunnaisen sanan tai sanojonon.
+
+        Args:
+            alkukirjain: kirjain, jolla sanan tulisi alkaa. Oletuksena valitaan
+            satunnaisesti.
+
+        Returns:
+            satunnainen sana tai sanoja yhtenä merkkijonona.
+        """
+        sana = ''
+        if alkukirjain:
+            sana += alkukirjain
+            solmu = self.juuri.lapset[alkukirjain]
+        else:
+            solmu = self.juuri
+        while len(solmu.lapset) > 0:
+            kirjain, solmu = random.choice(list(solmu.lapset.items()))
+            sana += kirjain
+        return sana
+
+    def alkukirjaimet(self):
+        """Palauttaa trieen tallennettujen merkkijonojen alkukirjaimet.
+
+        Returns:
+            alkukirjainten joukko.
+        """
+        return self.juuri.lapset.keys()

@@ -29,3 +29,9 @@ class TestTrie(unittest.TestCase):
         self.trie.lisaa(['hauki', 'on', 'kala'], 'joka')
         maara = self.trie.hae_seuraavat_sanat(['hauki', 'on', 'kala'])['joka']
         self.assertEqual(maara, 2)
+
+    def test_satunnainen_sanayhdistelma(self):
+        self.trie.lisaa(['hauki', 'on'], 'kala')
+        self.trie.lisaa(['kala', 'ei'], 'lennä')
+        satunnainen = self.trie.hae_satunnainen()
+        self.assertIn(satunnainen, ('hauki on ', 'kala ei '))

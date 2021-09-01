@@ -4,7 +4,8 @@ from trie import Trie
 
 
 class Sanalaskija:
-    """Luokka, joka lukee opetusdatan, laskee sanojen esiintymiset ja tallentaa ne triehen.
+    """Luokka, joka lukee opetusdatan, laskee sanojen esiintymiset ja tallentaa
+    ne triehen.
     """
 
     def __init__(self, aste=2):
@@ -22,7 +23,8 @@ class Sanalaskija:
             tiedostopolku: polku, josta luettevat lauseet haetaan.
 
         Returns:
-            2-tuple, jossa sanat trie-rakenteessa ja mietelauseen aloittavien sanojen joukko.
+            2-tuple, jossa sanat trie-rakenteessa ja mietelauseen aloittavien
+            sanojen joukko.
         """
         data = self._lue_opetusdatatiedosto(tiedostopolku)
         tulos = self._laske_sanat(data)
@@ -47,19 +49,17 @@ class Sanalaskija:
     def _laske_sanat(self, data):
         """Käy opetusdatan läpi, tallentaa "asteen" pituiset sanayhdistelmät ja
         niitä seuraavat sanat määrineen triehen ja listaa sanayhdistelmät, jotka
-        voivat aloittaa lausahduksen tai jatkaa lausahdusta virkkeen päätyttyä.
+        voivat aloittaa virkkeen.
 
         Args:
             data: opetusdata listana lauseita.
 
         Returns:
             trie: trie-tietorakenne, jossa on tieto sanojen seuraajista ja niiden määristä.
-            ensimmaiset: mietelauseen aloittavien sanojen lista.
-            jatkavat: pisteen jälkeen mietelausetta jatkavien sanojen joukko.
+            ensimmaiset: virkkeen aloittavien sanojen lista.
         """
         trie = Trie()
         ensimmaiset = []
-        jatkavat = []
         tarkistustrie = Trie()
         for rivi in data:
             sanat = rivi.split(' ')
@@ -71,7 +71,7 @@ class Sanalaskija:
                     edelliset.popleft()
                     if sana[len(sana)-1] in ('.', '?', '!') and len(sanat) > i+self.aste:
                         edelliset = deque([])
-                        jatkavat.append(sanat[i+1:i+self.aste+1])
+                        ensimmaiset.append(sanat[i+1:i+self.aste+1])
                 edelliset.append(sana)
-            tarkistustrie.lisaa([rivi], 'loppu')
-        return (trie, ensimmaiset, jatkavat, tarkistustrie)
+            tarkistustrie.lisaa([rivi], 'LOPPU')
+        return (trie, ensimmaiset, tarkistustrie)

@@ -18,5 +18,5 @@ class Kayttoliittyma:
             aste = ''
             while not aste.isnumeric() or int(aste)<1:
                 aste = input('Anna Markovin ketjujen aste, 1 tai 2: ')
-            print(self.generaattori.generoi(int(aste), teema))
+            print(self.generaattori.generoi(int(aste), teema, True))
 

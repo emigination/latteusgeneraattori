@@ -12,8 +12,10 @@ class TestGeneraattori(unittest.TestCase):
         with open(self.opetusdata.name, mode='w') as tiedosto:
             tiedosto.write(
                 'Tämä on tekstiä, niin myös tämä, ja vielä tämäkin.\n' +
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
-        lause = Generaattori(2, self.opetusdata.name).generoi()
+                'Tämä on toinen teksti, niin myös tämä, ja vielä tämäkin.\n' +
+                'Tämä on erilainen teksti. Tämä myös.\n' +
+                'Tämä on neljäs teksti.\n')
+        lause = Generaattori(1, self.opetusdata.name).generoi()
         self.assertGreater(len(lause), 20)
 
     def test_lause_tarpeeksi_lyhyt(self):

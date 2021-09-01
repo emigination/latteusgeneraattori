@@ -1,6 +1,5 @@
 import random
 from collections import deque
-import io
 from sanalaskija import Sanalaskija
 
 
@@ -17,7 +16,6 @@ class Generaattori:
         self.tiedostopolku = tiedostopolku
         self.trie = None
         self.ensimmaiset = None
-        self.jatkavat = None
         self.tarkistustrie = None
         self._alusta()
 
@@ -25,18 +23,20 @@ class Generaattori:
         data = Sanalaskija(self.aste).opettele(self.tiedostopolku)
         self.trie = data[0]
         self.ensimmaiset = data[1]
-        self.jatkavat = data[2]
-        self.tarkistustrie = data[3]
+        self.tarkistustrie = data[2]
 
-    def generoi(self, aste=None, teema=None):
-        """Luo lauseita Markovin ketjun avulla.
+    def generoi(self, aste=None, teema=None, omaperaisyystarkistus=False):
+        """Luo lauseita Markovin ketjun avulla. Lausetta jatketana pisteen
+        jälkeenkin sitä todennäköisemmin, mitä lyhyempi lause on.
 
         Returns:
             Valmis mietelause merkkijonona.
         """
-        if aste and aste!=self.aste:
+        if aste and aste != self.aste:
             self.aste = aste
             self._alusta()
+        if teema:
+            teema = teema[0].capitalize()+teema[1:]
         ei_suoraan_aineistosta = False
         while not ei_suoraan_aineistosta:
             sanat = self._valitse_aloitussanat(teema)
@@ -44,12 +44,12 @@ class Generaattori:
             while len(sanat) < 20:
                 seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
                 if not seuraavat:
-                    if len(self.jatkavat) < 1:
+                    if len(self.ensimmaiset) < 2:
                         break
                     if len(sanat) > 3 and random.random() < (0.1*len(sanat)):
                         break
                 while not seuraavat:
-                    edelliset = deque(random.choice(self.jatkavat))
+                    edelliset = deque(random.choice(self.ensimmaiset))
                     for sana in edelliset:
                         sanat.append(sana)
                     seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
@@ -67,7 +67,10 @@ class Generaattori:
                 edelliset.popleft()
                 edelliset.append(seuraava)
             lause = self._muuta_merkkijonoksi(sanat)
-            ei_suoraan_aineistosta = self._tarkista_lauseen_alkuperaisyys(lause)
+            ei_suoraan_aineistosta = True
+            if omaperaisyystarkistus:
+                ei_suoraan_aineistosta = self._tarkista_lauseen_omaperaisyys(
+                    lause)
         return lause
 
     def _valitse_aloitussanat(self, teema=None):
@@ -77,18 +80,32 @@ class Generaattori:
             teema : käyttäjän syöttämä teema, jos mitään.
 
         Returns:
-            [type]: [description]
+            aloitussanat listana.
         """
         sanat = []
-        if teema and self.aste < 2:
-            if self.trie.hae_seuraavat_sanat([teema]):
-                edelliset = [teema]
+        if teema:
+            if self.aste < 2:
+                if self.trie.hae_seuraavat_sanat([teema]):
+                    edelliset = [teema]
+                else:
+                    sanat.append(teema)
+                    seuraavat_sanat = ["on", "on", "ei", "ei", "tulee",
+                                       "pysyy", "odottaa", "voi", "tuntee",
+                                       "tahtoo", "näkee"]
+                    edelliset = [random.choice(seuraavat_sanat)]
             else:
-                sanat.append(teema)
-                seuraavat_sanat = ["on", "on", "ei", "ei", "tulee",
-                                   "pysyy", "odottaa", "voi", "tuntee",
-                                   "tahtoo", "näkee"]
-                edelliset = [random.choice(seuraavat_sanat)]
+                loytynyt = [
+                    sanoja for sanoja in self.ensimmaiset if teema.lower()
+                    in sanoja or teema in sanoja]
+                if len(loytynyt) > 0:
+                    edelliset = random.choice(loytynyt)
+                else:
+                    alkukirjaimet = [
+                        kirjain for kirjain in self.trie.alkukirjaimet() if kirjain.islower()]
+                    alkukirjain = random.choice(alkukirjaimet)
+                    edelliset = [teema] + \
+                        self.trie.hae_satunnainen(
+                            alkukirjain).strip().split(' ')
         else:
             edelliset = random.choice(self.ensimmaiset)
         sanat += edelliset
@@ -112,8 +129,16 @@ class Generaattori:
             lause += '.'
         return lause
 
-    def _tarkista_lauseen_alkuperaisyys(self, lause):
-        tarkistus = self.tarkistustrie.hae_seuraavat_sanat(lause)
-        if tarkistus:
+    def _tarkista_lauseen_omaperaisyys(self, lause):
+        """Tarkistaa, esiintyykö generoitu latteus aineistossa sellaisenaan.
+
+        Args:
+            lause: generoitu lause merkkijonona.
+
+        Returns:
+            True, jos lausetta ei löydy aineistosta, muuten False.
+        """
+        tarkistus = self.tarkistustrie.hae_seuraavat_sanat([lause])
+        if tarkistus and 'LOPPU' in tarkistus:
             return False
         return True
