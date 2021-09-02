@@ -61,7 +61,7 @@ class TestGeneraattori(unittest.TestCase):
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
         generaattori = Generaattori(1, self.opetusdata.name)
         omaperaisyys = generaattori._tarkista_lauseen_omaperaisyys(
-            generaattori.generoi())
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
         self.assertEqual(omaperaisyys, False)
 
     def test_omaperaisyystarkistus_palauttaa_true(self):

@@ -1,3 +1,3 @@
 # Testaus
 
-Yksikkötestaus on toteutettu Pytestillä. Testikattavuusraportin ja testikattavuuden kehityksen näkee [täältä](https://codecov.io/gh/emigination/latteusgeneraattori). Lisäksi on manuaalisesti tehty järjestelmätestejä. Automaattiset testit voi suorittaa projektin juurikansiossa komennolla "poetry run invoke test".
+Yksikkötestaus on toteutettu Pytestillä. Testikattavuusraportin ja testikattavuuden kehityksen näkee [täältä](https://codecov.io/gh/emigination/latteusgeneraattori). Automaattiset testit voi suorittaa projektin juurikansiossa komennolla "poetry run invoke test". Kattavuusraportin voi myös luoda komennolla "poetry run invoke coverage-report". Lisäksi on manuaalisesti tehty järjestelmätestejä.

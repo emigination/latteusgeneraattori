@@ -12,14 +12,15 @@ class Generaattori:
         """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai
         niiden puuttuessa kutsuu sanalaskijan luomaan tarvittavan datan.
         """
-        self.aste = aste
         self.tiedostopolku = tiedostopolku
+        self.aste = None
         self.trie = None
         self.ensimmaiset = None
         self.tarkistustrie = None
-        self._alusta()
+        self._alusta(aste)
 
-    def _alusta(self):
+    def _alusta(self, aste):
+        self.aste = aste
         data = Sanalaskija(self.aste).opettele(self.tiedostopolku)
         self.trie = data[0]
         self.ensimmaiset = data[1]
@@ -33,8 +34,7 @@ class Generaattori:
             Valmis mietelause merkkijonona.
         """
         if aste and aste != self.aste:
-            self.aste = aste
-            self._alusta()
+            self._alusta(aste)
         if teema:
             teema = teema[0].capitalize()+teema[1:]
         ei_suoraan_aineistosta = False
@@ -45,23 +45,15 @@ class Generaattori:
                 seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
                 if not seuraavat:
                     if len(sanat) > 3 and sanat[len(sanat)-1][len(sanat[len(sanat)-1])-1] \
-                        != ',' and random.random() < (0.1*len(sanat)):
+                            != ',' and random.random() < (0.1*len(sanat)):
                         break
-                while not seuraavat:
-                    edelliset = deque(random.choice(self.ensimmaiset))
-                    for sana in edelliset:
-                        sanat.append(sana)
-                    seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
-                summa = 0
-                for maara in seuraavat.values():
-                    summa += maara
-                satunnainen = random.randint(0, summa)
-                summa = 0
-                for sana, maara in seuraavat.items():
-                    summa += maara
-                    if summa >= satunnainen:
-                        seuraava = sana
-                        break
+                    while not seuraavat:
+                        edelliset = deque(random.choice(self.ensimmaiset))
+                        for sana in edelliset:
+                            sanat.append(sana)
+                        seuraavat = self.trie.hae_seuraavat_sanat(
+                            list(edelliset))
+                seuraava = self._arvo_seuraava(seuraavat)
                 sanat.append(seuraava)
                 edelliset.popleft()
                 edelliset.append(seuraava)
@@ -88,8 +80,7 @@ class Generaattori:
                     edelliset = [teema]
                 else:
                     sanat.append(teema)
-                    seuraavat_sanat = ["on", "on", "ei", "ei", "tulee",
-                                       "pysyy", "odottaa", "voi", "tuntee",
+                    seuraavat_sanat = ["on", "on", "ei", "ei", "tulee", "odottaa", "voi", "tuntee",
                                        "tahtoo", "näkee"]
                     edelliset = [random.choice(seuraavat_sanat)]
             else:
@@ -102,13 +93,32 @@ class Generaattori:
                     alkukirjaimet = [
                         kirjain for kirjain in self.trie.alkukirjaimet() if kirjain.islower()]
                     alkukirjain = random.choice(alkukirjaimet)
-                    edelliset = [teema] + \
-                        self.trie.hae_satunnainen(
-                            alkukirjain).strip().split(' ')
+                    edelliset = [teema] + self.trie.hae_satunnainen(
+                        alkukirjain).strip().split(' ')
         else:
             edelliset = random.choice(self.ensimmaiset)
         sanat += edelliset
         return sanat
+
+    def _arvo_seuraava(self, seuraavat):
+        """Valitse satunnaisesti seuraavan sanan niiden määrät huomioiden.
+
+        Args:
+            seuraavat: sanakirja, jossa on avaimina mahdolliset seuraavat sanat
+            ja arvoina niiden määrät.
+
+        Returns:
+            valittu sana.
+        """
+        summa = 0
+        for maara in seuraavat.values():
+            summa += maara
+        satunnainen = random.randint(0, summa)
+        summa = 0
+        for sana, maara in seuraavat.items():
+            summa += maara
+            if summa >= satunnainen:
+                return sana
 
     def _muuta_merkkijonoksi(self, sanalista):
         """Muuttaa sanalistan merkkijonoksi eli valmiiksi lauseeksi.
