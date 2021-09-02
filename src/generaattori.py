@@ -8,7 +8,7 @@ class Generaattori:
     esiintymistiheyksien perusteella.
     """
 
-    def __init__(self, aste=1, tiedostopolku='data/opetusdata.txt'):
+    def __init__(self, aste=2, tiedostopolku='data/opetusdata.txt'):
         """Luokan konstruktori, joka hakee tarvittavan datan tiedostoista tai
         niiden puuttuessa kutsuu sanalaskijan luomaan tarvittavan datan.
         """
@@ -44,9 +44,8 @@ class Generaattori:
             while len(sanat) < 20:
                 seuraavat = self.trie.hae_seuraavat_sanat(list(edelliset))
                 if not seuraavat:
-                    if len(self.ensimmaiset) < 2:
-                        break
-                    if len(sanat) > 3 and random.random() < (0.1*len(sanat)):
+                    if len(sanat) > 3 and sanat[len(sanat)-1][len(sanat[len(sanat)-1])-1] \
+                        != ',' and random.random() < (0.1*len(sanat)):
                         break
                 while not seuraavat:
                     edelliset = deque(random.choice(self.ensimmaiset))
