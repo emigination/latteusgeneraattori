@@ -28,6 +28,8 @@ class Sanalaskija:
             lause ole suoraan aineistosta..
         """
         data = self._lue_opetusdatatiedosto(tiedostopolku)
+        if not data:
+            return
         tulos = self._laske_sanat(data)
         return tulos
 
@@ -48,6 +50,7 @@ class Sanalaskija:
                     data.append(rivi)
         except Exception as virhe:
             print(f'Opetusdatatiedoston lukeminen ei onnistunut! ({virhe})')
+            return
         return data
 
     def _laske_sanat(self, data):

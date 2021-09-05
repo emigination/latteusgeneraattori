@@ -22,6 +22,8 @@ class Generaattori:
     def _alusta(self, aste):
         self.aste = aste
         data = Sanalaskija(self.aste).opettele(self.tiedostopolku)
+        if not data:
+            return
         self.trie = data[0]
         self.ensimmaiset = data[1]
         self.tarkistustrie = data[2]
@@ -35,6 +37,8 @@ class Generaattori:
         """
         if aste and aste != self.aste:
             self._alusta(aste)
+        if not self.trie:
+            return
         if teema:
             teema = teema[0].capitalize()+teema[1:]
         ei_suoraan_aineistosta = False

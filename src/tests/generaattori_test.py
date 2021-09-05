@@ -129,3 +129,7 @@ class TestGeneraattori(unittest.TestCase):
                 'Tämä on tekstiä, niin myös tämä, ja vielä tämäkin')
         lause = Generaattori(2, self.opetusdata.name).generoi()
         self.assertEqual(lause[len(lause)-1], '.')
+
+    def test_virhe_tiedostonluvussa_ei_kaada(self):
+        lause = Generaattori(1, 'tama/ei/ole/tiedosto.txt').generoi()
+        self.assertEqual(lause, None)
