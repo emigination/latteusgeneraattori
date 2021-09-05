@@ -11,14 +11,3 @@ class Solmu:
         """
         self.lapset = {}
         self.sanat = {}
-
-    # def __str__(self):
-    #     """(tehty debuggauksen helpottamiseksi)
-    #     """
-    #     merkjn = ''
-    #     for lapsi in self.lapset:
-    #         merkjn += lapsi + ', '
-    #     merkjn += ';'
-    #     for sana in self.sanat:
-    #         merkjn += sana + ', '
-    #     return merkjn

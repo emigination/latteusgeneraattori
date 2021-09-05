@@ -66,7 +66,6 @@ class Generaattori:
 
     def _valitse_aloitussanat(self, teema=None):
         """Valitsee lauseen aloittavat sanat teeman perusteella tai satunnaisesti.
-
         Args:
             teema : käyttäjän syöttämä teema, jos mitään.
 

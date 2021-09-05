@@ -6,7 +6,7 @@ Ohjelma on latteusgenerattori. Se luo automaattisesti mietelauseita Markovin ket
 
 Markovin ketju valitttiin algoritmiksi, koska sen avulla pystytään tuottamaan suhteellisen luonnolisen kaltaista kieltä ja se on riittävän yksinkertainen toteutettavaksi käytettävissä olevan ajan puitteissa. Trietä käytetään, jotta seuraavat mahdolliset sanat ja niiden määrät, joista voidaan siis laskea todennäköisyydet, on haettavissa tehokkaasti.
 
-*(Tulossa)* Ohjelmalle annetaan syötteeksi teema, johon liittyvän lausahduksen se sitten luo. Mikäli teemaksi annettu sana löytyy ohjelman aineistosta, se rupeaa luomaan lausetta suoraan siitä. Jos se ei tunne sanaa, väliin lisätään muu sopiva, datasta jo löytyvä sana. (Tai mahdollisesti ei teemaa ja ohjelma vain luo satunnaisen latteuden).
+Ohjelmalle annetaan syötteeksi teema, johon liittyvän lausahduksen se sitten luo. Mikäli teemaksi annettu sana löytyy ohjelman aineistosta, se rupeaa luomaan lausetta suoraan siitä. Jos se ei tunne sanaa, väliin lisätään muu sopiva, datasta jo löytyvä sana. (Tai mahdollisesti ei teemaa ja ohjelma vain luo satunnaisen latteuden).
 
 Tavoitteena on, että valmis, opetettu ohjelma toimii ajassa O(m+n), missä m on trien pisimmän sanayhdistelmän pituus ja n on lauseeseen tulevien sanojen määrä. Syötteen suhteen ohjelma toimii vakioajassa. Opetusvaiheen algoritmin aikavaativuus on O(n²), missä n on aineistossa olevien eri sanojen määrä. Myös tilavaativuus on luokkaa O(n²), koska matriisi vaatii sen verran tilaa.
 

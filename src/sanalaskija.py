@@ -23,8 +23,9 @@ class Sanalaskija:
             tiedostopolku: polku, josta luettevat lauseet haetaan.
 
         Returns:
-            2-tuple, jossa sanat trie-rakenteessa ja mietelauseen aloittavien
-            sanojen joukko.
+            3-tuple, jossa sanat trie-rakenteessa, virkkeen aloittavien
+            sanojen lista ja tarkistustrie sen tarkistamiseksi, ettei generoitava
+            lause ole suoraan aineistosta..
         """
         data = self._lue_opetusdatatiedosto(tiedostopolku)
         tulos = self._laske_sanat(data)
@@ -57,6 +58,8 @@ class Sanalaskija:
         Returns:
             trie: trie-tietorakenne, jossa on tieto sanojen seuraajista ja niiden määristä.
             ensimmaiset: virkkeen aloittavien sanojen lista.
+            tarkistustrie: trie, jossa on jokainen aineiston rivi yksi kerrallaan,
+            jotta voidaan tarkistaa ettei generoitava lause ole täysin sama kuin mikään niistä.
         """
         trie = Trie()
         ensimmaiset = []
