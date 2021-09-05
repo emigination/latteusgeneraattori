@@ -8,7 +8,7 @@ Ohjelmassa on vain tekstikäyttöliittymä. Käyttöliittymäluokkia on yksi, Ka
 
 ### Aineiston opettelu
 
-Aineiston lukemisen aikavaativuus on O(n), missä n on aineiston koko. Kukin sana lisätään triehen 1-k kertaa, missä k on Markovin ketjun aste, ja lisäksi kerran tarkistustriehen. Lisäys vie aikaa n, missä n on merkkien määrä. Listaan ja jonoon lisäminen tai jonon lopusta poistaminen toimivat kukin vakioajassa ja niitä tehdään korkeintaan kerran kutakin per sana. Jonon luominen on suhteessa Markovin ketjun asteeseen, eli aineiston koon suhteen vakioaikainen. Näin ollen opettelu vie aikaa O(n), missä n on edelleen merkkien määrä.
+Aineiston lukemisen aikavaativuus on O(n), missä n on aineiston koko. Kukin sana lisätään triehen 1–k+1 kertaa, missä k on Markovin ketjun aste, ja lisäksi kerran tarkistustriehen. Lisäys vie aikaa n, missä n on merkkien määrä. Listaan ja jonoon lisäminen tai jonon lopusta poistaminen toimivat kukin vakioajassa ja niitä tehdään korkeintaan kerran kutakin per sana. Jonon luominen on suhteessa Markovin ketjun asteeseen, eli aineiston koon suhteen vakioaikainen. Näin ollen opettelu vie aikaa O(n), missä n on edelleen merkkien määrä.
 
 ### Generointi
 
@@ -20,4 +20,8 @@ Kun seuraava sana arvotaan vaihtoehdoista, kaikki vaihtoehdot käydään läpi, 
 
 Sanalistan muuttaminen merkkijonoksi ja sen hakeminen tarkistustriesta tapahtuvat suhteessa lauseen pituuteen. Jos lause ei läpäise alkuperäisyystarkistusta eli on täysin sama kuin aineistossa, koko generointi tehdään uudestaan. Normaalisti se käy enintään muutaman kerran. Näin ollen koko generoinnin aikavaativuus on O(n), missä n on harjoitusaineiston koko.
 
+Jos generointia haluasi kehittää toimimaan tehokkaammin isommilla aineistoilla, teeman etsiminen aineistosta tulisi toteuttaa jotenkin muuten kuin käymällä läpi koko aloitussanojen lista.
+
 ## Tilavaativuudet
+
+Tilavaativuus on O(n) suhteessa opetusdatan kokoon, koska kukin sana lisätään trie-rakenteeseen 1–k+1 kertaa, missä k on Markovin ketjujen asti. (Virkkeen ensimmäiset ja viimeiset k sanaa lisätään vain kerran, koska ne esiintyvät triessä vain  joko jonkin k:n sanan yhdistelmän seuraajana tai sellaisen edeltäjänä, mutta virkkeen keskellä olevat sanat esiintyvät molemmissa rooleissa.) Myös lista aloitussanoista on yhtä pitkä kuin aineistoissa on virkkeitä, eli sekin menee tilavaativuuteen O(n).

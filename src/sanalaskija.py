@@ -40,11 +40,14 @@ class Sanalaskija:
         Returns:
             Opetusdatan rivit listana.
         """
-        with io.open(tiedostopolku, encoding='utf-8') as tiedosto:
-            data = []
-            for rivi in tiedosto:
-                rivi = rivi.replace("\n", "")
-                data.append(rivi)
+        try:
+            with io.open(tiedostopolku, encoding='utf-8') as tiedosto:
+                data = []
+                for rivi in tiedosto:
+                    rivi = rivi.replace("\n", "")
+                    data.append(rivi)
+        except Exception as virhe:
+            print(f'Opetusdatatiedoston lukeminen ei onnistunut! ({virhe})')
         return data
 
     def _laske_sanat(self, data):
